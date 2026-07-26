@@ -1,18 +1,19 @@
 from sqlalchemy.orm import Session
 
 from backend.app.database.models import Scan
+from backend.app.services.prediction_service import predict_phishing
 from backend.app.utils.url_features import extract_url_features
 
 
 def analyze_and_save_url(db: Session, url: str):
     """
-    Analyze a URL, save the scan to the database,
-    and return the extracted features.
+    Analyze a URL, predict phishing risk,
+    save the scan, and return the result.
     """
 
     features = extract_url_features(url)
 
-    prediction = "Unknown"
+    prediction, confidence, reasons = predict_phishing(features)
 
     scan = Scan(
         url=url,
@@ -28,4 +29,4 @@ def analyze_and_save_url(db: Session, url: str):
     db.commit()
     db.refresh(scan)
 
-    return prediction, features
+    return prediction, confidence, reasons, features

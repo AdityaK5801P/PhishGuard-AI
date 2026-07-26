@@ -13,13 +13,15 @@ def analyze_url(
     request: AnalyzeRequest,
     db: Session = Depends(get_db),
 ):
-    prediction, features = analyze_and_save_url(
-        db=db,
-        url=str(request.url),
-    )
+    prediction, confidence, reasons, features = analyze_and_save_url(
+    db=db,
+    url=str(request.url),
+)
 
     return AnalyzeResponse(
-        status="success",
-        prediction=prediction,
-        features=features,
-    )
+    status="success",
+    prediction=prediction,
+    confidence=confidence,
+    reasons=reasons,
+    features=features,
+)
