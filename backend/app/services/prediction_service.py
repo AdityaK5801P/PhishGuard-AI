@@ -17,6 +17,10 @@ def predict_phishing(features: dict):
     if features["contains_ip"]:
         score += 2
         reasons.append("URL contains an IP address.")
+        
+    if features["uses_url_shortener"]:
+        score += 2
+        reasons.append("URL uses a URL shortening service.")
 
     if features["contains_at_symbol"]:
         score += 2
@@ -30,7 +34,10 @@ def predict_phishing(features: dict):
         score += 1
         reasons.append("Large number of dots detected.")
 
-    if features["suspicious_keyword_count"] >= 2:
+    if features["suspicious_keyword_count"] >= 4:
+        score += 3
+        reasons.append("Large number of suspicious keywords detected.")
+    elif features["suspicious_keyword_count"] >= 2:
         score += 2
         reasons.append("Multiple suspicious keywords detected.")
 
