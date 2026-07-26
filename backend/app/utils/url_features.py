@@ -1,5 +1,15 @@
 from urllib.parse import urlparse
 import ipaddress
+SUSPICIOUS_KEYWORDS = [
+    "login",
+    "verify",
+    "secure",
+    "account",
+    "password",
+    "update",
+    "bank",
+    "signin",
+]
 
 
 def extract_url_features(url: str) -> dict:
@@ -17,6 +27,13 @@ def extract_url_features(url: str) -> dict:
     except ValueError:
         contains_ip = False
 
+    url_lower = url.lower()
+    matched_keywords = [
+    keyword
+    for keyword in SUSPICIOUS_KEYWORDS
+    if keyword in url_lower
+]
+
     features = {
         "url": url,
         "url_length": len(url),
@@ -28,6 +45,8 @@ def extract_url_features(url: str) -> dict:
         "contains_at_symbol": "@" in url,
         "hyphen_count": url.count("-"),
         "dot_count": url.count("."),
+        "suspicious_keywords": matched_keywords,
+        "suspicious_keyword_count": len(matched_keywords),
     }
 
     return features

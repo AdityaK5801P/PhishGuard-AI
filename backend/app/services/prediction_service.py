@@ -30,6 +30,10 @@ def predict_phishing(features: dict):
         score += 1
         reasons.append("Large number of dots detected.")
 
+    if features["suspicious_keyword_count"] >= 2:
+        score += 2
+        reasons.append("Multiple suspicious keywords detected.")
+
     if score >= 4:
         prediction = "Phishing"
         confidence = 95
