@@ -74,6 +74,18 @@ RULES = [
     apply_keyword_rule,
 ]
 
+def calculate_confidence(score: int) -> int:
+    if score == 0:
+        return 100
+    elif score == 1:
+        return 60
+    elif score <= 3:
+        return 75
+    elif score <= 5:
+        return 90
+    else:
+        return 98
+
 def predict_phishing(features: dict):
     """
     Simple rule-based phishing detection.
@@ -91,13 +103,12 @@ def predict_phishing(features: dict):
 
 
     if score >= 4:
-        prediction = "Phishing"
-        confidence = 95
-    elif score >= 2:
+     prediction = "Phishing"
+    elif score >= 1:
         prediction = "Suspicious"
-        confidence = 75
     else:
         prediction = "Safe"
-        confidence = 98
+
+    confidence = calculate_confidence(score)
 
     return prediction, confidence, reasons
